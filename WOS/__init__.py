@@ -1,6 +1,6 @@
 #!/usr/bin/python
 import ujson
-import bgzf
+from . import bgzf
 import struct
 from tqdm.auto import tqdm
 
