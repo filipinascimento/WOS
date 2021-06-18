@@ -164,10 +164,10 @@ def readIndicesDictionary(indicesDataPath,showProgressbar=False,estimatedCount=7
             pbar = tqdm(total=estimatedCount)
         UID2Positions = {}
         while True:
-            if(showProgressbar):
-                pbar.update(1)
             data = fd.read(8*2)
             if(len(data)==8*2):
+                if(showProgressbar):
+                    pbar.update(1)
                 dataSize,position = struct.unpack("<QQ",data)
                 newID = fd.read(dataSize-8).decode("utf-8")
                 UID2Positions[newID] = position
