@@ -2,7 +2,7 @@
 Simple tool to store and read dictionaries in bgz files.
 
 # Installation
-Clone this repository and use `pip install -e .` from that directory.
+Clone this repository and use `pip install -e .` from that directory. You can also install it directly from the repository using `pip install git+https://github.com/filipinascimento/WOS.git -U`.
 
 # Usage
 
