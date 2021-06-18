@@ -112,10 +112,10 @@ class DatabaseReader:
             if(articles):
                 for article in articles:
                     articlesCount+=1
-                    if(showProgressbar):
-                        pbar.update(1)
                     if(maxCount>=0 and articlesCount>maxCount):
                         break
+                    if(showProgressbar):
+                        pbar.update(1)
                     else:
                         if('UID' in article):
                             UID = article["UID"]
