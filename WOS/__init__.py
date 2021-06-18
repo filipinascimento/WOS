@@ -114,7 +114,7 @@ class DatabaseReader:
                     articlesCount+=1
                     if(showProgressbar):
                         pbar.update(1)
-                    if(maxCount>=0 and articlesCount>=maxCount):
+                    if(maxCount>=0 and articlesCount>maxCount):
                         break
                     else:
                         if('UID' in article):
@@ -127,7 +127,7 @@ class DatabaseReader:
                                 indexDictionary[UID] = position
             else:
                 break
-            if(maxCount>=0 and articlesCount>=maxCount):
+            if(maxCount>=0 and articlesCount>maxCount):
                 break
         self.fileHandler.seek(savedPosition)
 
