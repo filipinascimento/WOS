@@ -20,7 +20,7 @@ Setting up the paths to the data:
 from pathlib import Path
 dataPath = Path("/gpfs/sciencegenome/WoS-disambiguation/")
 WOSDataPath = dataPath / "WOSData.bgz"
-UID2PositionPath = dataPath / "UID2Positions.bgz"
+UID2IndexPath = dataPath / "WOSDataIndex_test.bgz"
 ```
 
 
@@ -41,17 +41,44 @@ Reading using the random access API:
 
 from tqdm.auto import tqdm
 
-#Getting some random IDs
-import random
-IDSample = random.sample(list(UID2Position), 1000)
-
-
-#Accessing and checking UID
+#loading the reader
 reader = WOS.DatabaseReader(WOSDataPath)
-for ID in tqdm(IDSample):
-    article = reader.articleAt(UID2Position[ID])
-    assert article["UID"] == ID
+
+#reading articles in order (reading the first 2 articles)
+articles = reader.readNextArticles(2)
+
+# Each article include a "_position" attribute that can
+# be used to retrieve the article
+anArticle = articles[0]
+print(anArticle["UID"], anArticle["_position"])
+
+#random access can be accomplished by using the method articleAt
+retrievedArticle = reader.articleAt(anArticle["_position"])
+assert retrievedArticle["UID"] == anArticle["UID"]
+
 reader.close()
+```
+
+
+Reading using the random access API and a index dictionary/file:
+```python
+# Example creating a index
+reader = WOS.DatabaseReader(WOSDataPath)
+maxCount = 100 #set to -1 to generate the index for all the the articles
+
+indexDictionary = reader.generateIndex(showProgressbar=True, maxCount=maxCount)
+for UID, position in indexDictionary.items():
+    assert UID == reader.articleAt(position)["UID"]
+    assert int(position) == int(reader.articleAt(position)["_position"])
+
+indexFilePath = UID2IndexPath
+reader.generateIndex(indicesPath=indexFilePath, showProgressbar=True, maxCount=maxCount)
+indexDictionary = WOS.readIndicesDictionary(indexFilePath, showProgressbar=True, estimatedCount = maxCount)
+for UID, position in indexDictionary.items():
+    assert UID == reader.articleAt(position)["UID"]
+    assert int(position) == int(reader.articleAt(position)["_position"])
+reader.close()
+
 ```
 
 Reading all the entries:
